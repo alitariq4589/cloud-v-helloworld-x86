@@ -1,0 +1,31 @@
+pipeline {
+    agent {label "x86_runner2"}
+
+    stages {
+        stage('Clone Repository') {
+            steps('delegate'){
+                    checkout scm //Clones the repository on the local machine
+            }
+        }
+        stage ('Compilation Phase'){
+            steps{
+                    sh '''#!/bin/bash
+                        gcc -g ./helloworld.c -o helloworld.out
+                    '''
+                    sh '''#!/bin/bash
+                        riscv64-unknown-linux-gnu-gcc ./helloworld.c -o helloworld_riscv_compiled.out
+                    '''
+            }
+        }
+        stage ('Running Binaries'){
+            steps {
+                    sh ''' #!/bin/bash
+                        ./helloworld.out
+                    '''
+                    sh'''#!/bin/bash
+                        qemu-riscv64 -L $RISCV_SYSROOT helloworld_riscv_compiled.out
+                    '''
+            }
+        }
+    }
+}
