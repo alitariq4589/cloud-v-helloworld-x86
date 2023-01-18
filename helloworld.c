@@ -1,6 +1,5 @@
 #include<stdio.h>  
 int main (){ 
-	printf("Hello World new PR!\n");  
+	printf("Hello World just main!\n");  
 }
-int prfunc(){}
 
